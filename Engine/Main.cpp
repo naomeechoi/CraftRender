@@ -1,20 +1,20 @@
 #include "Core/Win32Window.h"
-
+#include "Graphics/GraphicsContext.h"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int main()
 {
     // Register the window class.
-    std::wstring className = L"Craft Engine Window";
-    std::wstring title = L"Craft Engine";
     uint32_t width = 1280;
     uint32_t height = 800;
     HINSTANCE hInstance = GetModuleHandle(nullptr);
-    Craft::Win32Window window(width, height, hInstance, WindowProc);
+    Craft::Win32Window window(width, height, L"Craft Engine", hInstance, WindowProc);
     if (!window.Initialize())
         return -1;
    
+    Craft::GraphicsContext context;
+    context.Initialize(width, height, window);
     // Run the message loop.
     MSG msg = { };
     while (msg.message != WM_QUIT)
