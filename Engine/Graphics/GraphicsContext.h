@@ -13,15 +13,32 @@ namespace Craft
 		GraphicsContext();
 		~GraphicsContext();
 
-		void Initialize(uint32_t width, uint32_t height, const Win32Window& window);
+		void Initialize(const Win32Window& window);
+		void BeginScene(float red, float green, float blue);
+
+		void EndScene(uint32_t vsync);
+
+		inline ID3D11Device& GetDevice() const { return *device; }
+		inline ID3D11DeviceContext& GetDeviceContext() const { return *context; }
+		static GraphicsContext& Get();
+	private:
+		void CreateDevice();
+		void CreateSwapChain(const Win32Window& window);
+		void CreateViewport(const Win32Window& window);
+		void CreateRenderTargetView();
+
 	private:
 		ID3D11Device* device = nullptr;
 		ID3D11DeviceContext* context = nullptr;
 		IDXGISwapChain* swapChain = nullptr;
 
+		ID3D11RenderTargetView* renderTargetView = nullptr;
+
 		D3D11_VIEWPORT viewport = {};
 
 		uint32_t width = 0;
 		uint32_t height = 0;
+
+		static GraphicsContext* instance;
 	};
 }

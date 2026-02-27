@@ -1,59 +1,27 @@
-#include "Core/Win32Window.h"
-#include "Graphics/GraphicsContext.h"
+#include "Core/Engine.h"
+using namespace Craft;
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+void LaunchEngineStartUp(HINSTANCE instance)
+{
+	Engine engine;
+	engine.Initialize(instance);
+	engine.Run();
+}
 
+#ifdef _CONSOLE
 int main()
 {
-    // Register the window class.
-    uint32_t width = 1280;
-    uint32_t height = 800;
-    HINSTANCE hInstance = GetModuleHandle(nullptr);
-    Craft::Win32Window window(width, height, L"Craft Engine", hInstance, WindowProc);
-    if (!window.Initialize())
-        return -1;
-   
-    Craft::GraphicsContext context;
-    context.Initialize(width, height, window);
-    // Run the message loop.
-    MSG msg = { };
-    while (msg.message != WM_QUIT)
-    {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        else
-        {
-
-        }
-    }
-
-    return 0;
+    LaunchEngineStartUp(GetModuleHandle(nullptr));
 }
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+#else
+int WINAPI WinMain(
+    _In_ HINSTANCE hInstance,
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPSTR lpCmdLine,
+    _In_ int nShowCmd
+)
 {
-    switch (uMsg)
-    {
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        return 0;
-
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hwnd, &ps);
-
-        // All painting occurs here, between BeginPaint and EndPaint.
-
-        FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
-        EndPaint(hwnd, &ps);
-    }
+    LaunchEngineStartUp(hInstance);
     return 0;
-
-    }
-    return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
+#endif

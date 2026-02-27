@@ -1,4 +1,5 @@
 #include "Win32Window.h"
+#include "Renderer.h"
 
 namespace Craft
 {
@@ -14,7 +15,7 @@ namespace Craft
         className = nullptr;
 	}
 
-	bool Win32Window::Initialize()
+    bool Win32Window::Initialize()
 	{
         WNDCLASS wc = { };
         wc.lpfnWndProc = messageProcedure;
