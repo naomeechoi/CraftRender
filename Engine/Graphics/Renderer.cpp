@@ -1,84 +1,85 @@
 #include "Renderer.h"
 #include "Core/Common.h"
 #include "GraphicsContext.h"
+#include "StaticMesh.h"
+#include "Shader/Shader.h"
+#include "Math/Transform.h"
 #include <d3dcompiler.h>
+#include <cassert>
 
 namespace Craft
 {
+	Renderer* Renderer::instance = nullptr;
 
-    Renderer::Renderer()
-    {
-    }
+	Renderer::Renderer()
+	{
+		assert(!instance);
+		instance = this;
+	}
 
-    Renderer::~Renderer()
-    {
-        // TEMP: 재사용하는 렌더 커맨드 해제
+	Renderer::~Renderer()
+	{
+	}
 
-        auto& command = renderQueue[0];
-        SafeRelease(command.vertexBuffer);
-        SafeRelease(command.indexBuffer);
-        SafeRelease(command.inputLayout);
-        SafeRelease(command.vertexShader);
-        SafeRelease(command.pixelShader);
-    }
+	// 초기화.
+	void Renderer::Initialize()
+	{
+	}
 
-    void Renderer::Initialize()
-    {
-        // TEMP: 프레임워크 구성될 때까지 임시로 재사용할 리소스 생성
-        RenderCommand renderCommand;
+	void Renderer::Submit(
+		std::shared_ptr<StaticMesh> mesh,
+		std::shared_ptr<Shader> shader,
+		std::shared_ptr<Transform> transform)
+	{
+		RenderCommand command;
+		command.mesh = mesh;
+		command.shader = shader;
+		command.transform = transform;
 
-        auto& device = GraphicsContext::Get().GetDevice();
+		renderQueue.emplace_back(command);
+	}
 
-        float vertices[] = 
-        {
-            0.0f, 0.5f, 0.1f,
-            0.5f, -0.5f, 0.1f,
-           -0.5f, -0.5f, 0.1f,
-        };
+	// DrawCall 발생 처리.
+	// -> 렌더링 파이프라인 실행(구동).
+	void Renderer::DrawScene()
+	{
+		// 바인딩.
+		// -> 셰이더 각 단계에 필요한 정보 전달 및 설정.
+		// State 설정.
+		auto& context = GraphicsContext::Get().GetDeviceContext();
 
-        D3D11_BUFFER_DESC vertexBufferDesc = {};
-        vertexBufferDesc.ByteWidth = sizeof(float) * _countof(vertices);
-        vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-        vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		// 렌더 커맨드 가져오기.
+		for (const RenderCommand& command : renderQueue)
+		{
+			//auto vertexBuffer = command.mesh->GetVertexBuffer();
+			//uint32_t stride = command.mesh->GetStride();
+			//uint32_t offset = 0;
 
-        D3D11_SUBRESOURCE_DATA vertexData = {};
-        vertexData.pSysMem = vertices;
+			/*context.IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+			context.IASetIndexBuffer(command.mesh->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);*/
+			//context.IASetInputLayout(command.shader->GetInputLayout());
+			// 점 3개씩 잘라서 읽고, 삼각형을 만들어주는 모드.
+			/*context.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);*/
 
-        ID3D11Buffer* vertexBuffer = nullptr;
-        HRESULT result = device.CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
-        if (FAILED(result))
-        {
-            __debugbreak();
-            return;
-        }
+			// 셰이더 설정.
+			//context.VSSetShader(command.shader->GetVertexShader(), nullptr, 0);
+			//context.PSSetShader(command.shader->GetPixelShader(), nullptr, 0);
 
-        uint32_t indices[] = { 0,1,2 };
-        D3D11_BUFFER_DESC indexBufferDesc = {};
-        indexBufferDesc.ByteWidth = sizeof(uint32_t) * _countof(indices);
-        indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-        indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+			// 드로우 콜.
+			// 렌더링 파이프라인 동작.
 
-        D3D11_SUBRESOURCE_DATA indexData = {};
-        indexData.pSysMem = indices;
+			command.mesh->Bind();
+			command.shader->Bind();
+			command.transform->Bind();
+			context.DrawIndexed(command.mesh->GetIndexCount(), 0, 0);
+		}
 
-        ID3D11Buffer* indexBuffer = nullptr;
-        result = device.CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
-        if (FAILED(result))
-        {
-            __debugbreak();
-            return;
-        }
+		renderQueue.clear();
+	}
 
-        // 셰이더 컴파일
-        // 셰이더 객체 생성
-
-        RenderCommand command;
-        command.vertexBuffer = vertexBuffer;
-        command.indexBuffer = indexBuffer;
-        command.indexCount = _countof(indices);
-    }
-
-    void Renderer::DrawScene()
-    {
-    }
+	Renderer& Renderer::Get()
+	{
+		assert(instance);
+		return *instance;
+	}
 }

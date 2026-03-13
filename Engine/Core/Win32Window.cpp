@@ -1,5 +1,5 @@
 #include "Win32Window.h"
-#include "Renderer.h"
+#include "Graphics/Renderer.h"
 
 namespace Craft
 {
@@ -11,8 +11,6 @@ namespace Craft
 	Win32Window::~Win32Window()
 	{
 		UnregisterClass(className, instance);
-        delete className;
-        className = nullptr;
 	}
 
     bool Win32Window::Initialize()
