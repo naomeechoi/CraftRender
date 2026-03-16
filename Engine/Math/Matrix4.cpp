@@ -126,6 +126,18 @@ namespace Craft
 		return Scale(scale, scale, scale);
 	}
 
+	Matrix4 Matrix4::LookAt(
+		const Vector3& position,
+		const Vector3& target,
+		const Vector3& up)
+	{
+		// 앞 방향(카메라 시선 방향)
+		Vector3 forward = (target - position).Normalized();
+		Vector3 right = Cross(up, forward).Normalized();
+		Vector3 upDir = Cross(forward, right);
+		return Matrix4();
+	}
+
 	Matrix4& Matrix4::operator=(const Matrix4& other)
 	{
 		memcpy(elements, other.elements, sizeof(float) * 16);

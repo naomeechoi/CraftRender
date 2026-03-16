@@ -32,6 +32,8 @@ namespace Craft
 		static Matrix4 Scale(const Vector3& scale);
 		static Matrix4 Scale(float scale);
 
+		static Matrix4 LookAt(const Vector3& position, const Vector3& target, const Vector3& up);
+
 		Matrix4& operator=(const Matrix4& other);
 		Matrix4 operator*(const Matrix4& other) const;
 		Matrix4& operator*=(const Matrix4& other);

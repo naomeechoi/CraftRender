@@ -67,7 +67,7 @@ void QuadMeshActor::Tick(float deltaTime)
 	//mesh.lock()->UpdateVertexBuffer(vertices);
 
 	// 트랜스폼 조정.
-	transform->rotation.z = rotation;
-	transform->scale = Vector3(scale, scale, scale);
-	transform->position.x = xPosition;
+	//transform->rotation.z = rotation;
+	//transform->scale = Vector3(scale, scale, scale);
+	//transform->position.x = xPosition;
 }

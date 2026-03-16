@@ -14,7 +14,7 @@ namespace Craft
 		virtual void Draw() override;
 
 	private:
-		Matrix4 cameraMatrix;
+		Matrix4 viewMatrix;
 	};
 }
 

@@ -24,6 +24,10 @@ namespace Craft
 		// ¿ÜÀû(Cross Product/Outer Product)
 		friend CRAFT_API Vector3 Cross(const Vector3& left, const Vector3& right);
 
+		float Length() const;
+
+		Vector3 Normalized() const;
+
 		static Vector3 Zero;
 		static Vector3 One;
 		static Vector3 Right;

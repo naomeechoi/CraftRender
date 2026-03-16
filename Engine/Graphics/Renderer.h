@@ -1,4 +1,6 @@
 #pragma once
+
+#include "Math/Matrix4.h"
 #include <vector>
 #include <d3d11.h>
 #include <memory>
@@ -28,11 +30,15 @@ namespace Craft
 			std::shared_ptr<StaticMesh> mesh,
 			std::shared_ptr<Shader> shader,
 			std::shared_ptr<Transform> transform);
+
+		void UpdateCameraMatrix(const Matrix4& viewMatrix);
+
 		void DrawScene();
 		static Renderer& Get();
 
 	private:
 		std::vector<RenderCommand> renderQueue;
+		ID3D11Buffer* cameraBuffer = nullptr;
 		static Renderer* instance;
 	};
 }

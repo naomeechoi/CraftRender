@@ -1,5 +1,6 @@
 #include "CameraActor.h"
 #include "Math/Transform.h"
+#include "Graphics/Renderer.h"
 
 namespace Craft
 {
@@ -14,14 +15,18 @@ namespace Craft
 	void CameraActor::Tick(float deltaTime)
 	{
 		Actor::Tick(deltaTime);
-		Matrix4 translation = Matrix4::Translation(transform->position);
-		Matrix4 rotation = Matrix4::Translation(transform->rotation);
 
-		cameraMatrix = Matrix4::Inverse(translation) * Matrix4::Inverse(rotation);
+		// 위치 변환 행렬의 역벽환을 위해 * -1.0f를 해줌
+		Matrix4 inverseTranslation = Matrix4::Translation(transform->position * -1.0f);
+		Matrix4 rotation = Matrix4::Rotation(transform->rotation);
+
+		viewMatrix = inverseTranslation * Matrix4::Inverse(rotation);
 	}
 
 	void CameraActor::Draw()
 	{
 		Actor::Draw();
+
+		Renderer::Get().UpdateCameraMatrix(viewMatrix);
 	}
 }

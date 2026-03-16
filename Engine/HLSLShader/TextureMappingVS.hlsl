@@ -11,7 +11,7 @@ cbuffer Transform : register(b0)
 
 cbuffer Camera : register(b1)
 {
-    matrix viewMatrix;
+    matrix cameraMatrix;
 };
 
 struct VSOutput
@@ -25,6 +25,8 @@ VSOutput main(VSInput input)
     VSOutput output;
    // output.position = float4(input.position, 1);
     output.position = mul(float4(input.position, 1), worldMatrix);
+    output.position = mul(output.position, cameraMatrix);
+    
     output.texCoord = input.texCoord;
     
     return output;

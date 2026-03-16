@@ -19,11 +19,21 @@ namespace Craft
 
 	Renderer::~Renderer()
 	{
+		SafeRelease(cameraBuffer);
 	}
 
 	// 초기화.
 	void Renderer::Initialize()
 	{
+		auto& device = GraphicsContext::Get().GetDevice();
+
+		D3D11_BUFFER_DESC bufferDesc = {};
+		bufferDesc.ByteWidth = sizeof(Matrix4);
+		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+		ThrowIfFailed(device.CreateBuffer(&bufferDesc, nullptr, &cameraBuffer), L"Failed to create camera buffer");
 	}
 
 	void Renderer::Submit(
@@ -37,6 +47,18 @@ namespace Craft
 		command.transform = transform;
 
 		renderQueue.emplace_back(command);
+	}
+
+	void Renderer::UpdateCameraMatrix(const Matrix4& viewMatrix)
+	{
+		auto& context = GraphicsContext::Get().GetDeviceContext();
+		D3D11_MAPPED_SUBRESOURCE resource = {};
+		ThrowIfFailed(context.Map(cameraBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource),
+			L"Failed to map camera buffer");
+
+		Matrix4 viewMatirxRef = Matrix4::Transpose(viewMatrix);
+		memcpy(resource.pData, &viewMatirxRef, sizeof(Matrix4));
+		context.Unmap(cameraBuffer, 0);
 	}
 
 	// DrawCall 발생 처리.
@@ -71,6 +93,8 @@ namespace Craft
 			command.mesh->Bind();
 			command.shader->Bind();
 			command.transform->Bind();
+			
+			context.VSSetConstantBuffers(1, 1, &cameraBuffer);
 			context.DrawIndexed(command.mesh->GetIndexCount(), 0, 0);
 		}
 
