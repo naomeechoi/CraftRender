@@ -27,6 +27,9 @@
     <ClInclude Include="Actor\QuadMeshActor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Actor\CameraMovementActor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor\TriangleMeshActor.cpp">
@@ -42,6 +45,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Actor\QuadMeshActor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor\CameraMovementActor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

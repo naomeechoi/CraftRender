@@ -6,7 +6,7 @@
 
 namespace Craft
 {
-	class Transform
+	class CRAFT_API Transform
 	{
 	public:
 		Transform();
@@ -19,6 +19,10 @@ namespace Craft
 		Vector3 position = Vector3::Zero;
 		Vector3 rotation = Vector3::Zero;
 		Vector3 scale = Vector3::One;
+
+		Vector3 Right() const;
+		Vector3 Up() const;
+		Vector3 Forward() const;
 
 	private:
 		Matrix4 transformMatrix;

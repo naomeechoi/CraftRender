@@ -83,12 +83,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Actor\CameraMovementActor.h" />
     <ClInclude Include="Actor\TriangleMeshActor.h" />
     <ClInclude Include="Level\TriangleDemoLevel.h" />
     <ClInclude Include="Actor\QuadMeshActor.h" />
     <ClInclude Include="Mesh\TriangleMesh.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Actor\CameraMovementActor.cpp" />
     <ClCompile Include="Actor\TriangleMeshActor.cpp" />
     <ClCompile Include="Level\TriangleDemoLevel.cpp" />
     <ClCompile Include="Main.cpp" />

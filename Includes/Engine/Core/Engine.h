@@ -11,6 +11,7 @@ namespace Craft
 	class Level;
 	class MeshLoader;
 	class TextureLoader;
+	class Input;
 
 	struct EngineSetting
 	{
@@ -60,6 +61,7 @@ namespace Craft
 		std::unique_ptr<TextureLoader> textureLoader;
 		std::shared_ptr<Level> mainLevel;
 		std::shared_ptr<Level> nextLevel;
+		std::unique_ptr<Input> input;
 		EngineSetting setting;
 
 		static Engine* instance;

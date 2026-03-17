@@ -5,6 +5,7 @@
 #include "Level/Level.h"
 #include "Resource/MeshLoader.h"
 #include "Resource/TextureLoader.h"
+#include "Core/Input.h"
 
 namespace Craft
 {
@@ -49,6 +50,8 @@ namespace Craft
 
 		meshLoader = std::make_unique<MeshLoader>();
 		textureLoader = std::make_unique<TextureLoader>();
+
+		input = std::make_unique<Input>();
 
 		return true;
 	}
@@ -185,7 +188,27 @@ namespace Craft
 			instance->OnResize(width, height);
 		}
 		return 0;
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		case WM_SYSKEYDOWN:
+		case WM_SYSKEYUP:
+		{
+			if (GetFocus() != handle)
+				break;
+			
+			if (!Input::IsValid())
+				break;
 
+			bool isKeyUp = (lparam & ((int64_t)1 << 30)) != 0;
+			bool isKeyDown = (lparam & ((int64_t)1 << 31)) == 0;
+
+			if (isKeyUp != isKeyDown)
+			{
+				uint32_t vkCode = static_cast<uint32_t>(wparam);
+				Input::Get().SetKeyUpDown(vkCode, isKeyUp, isKeyDown);
+			}
+		}
+		return 0;
 		}
 		return DefWindowProc(handle, message, wparam, lparam);
 	}
