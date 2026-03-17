@@ -8,8 +8,11 @@
 
 namespace Craft
 {
+	Engine* Engine::instance = nullptr;
 	Engine::Engine()
 	{
+		assert(!instance);
+		instance = this;
 	}
 
 	Engine::~Engine()
@@ -125,6 +128,31 @@ namespace Craft
 		}
 	}
 
+	void Engine::OnResize(uint32_t width, uint32_t height)
+	{
+		if (!graphicsContext || !window)
+			return;
+
+		graphicsContext->OnResize(width, height);
+		window->SetWidthAndHeight(width, height);
+	}
+
+	Engine& Engine::Get()
+	{
+		assert(instance);
+		return *instance;
+	}
+
+	uint32_t Engine::GetWidth() const
+	{
+		return window->Width();
+	}
+
+	uint32_t Engine::GetHeight() const
+	{
+		return window->Height();
+	}
+
 	LRESULT Engine::Win32MessageProcedure(
 		HWND handle, UINT message, WPARAM wparam, LPARAM lparam)
 	{
@@ -142,6 +170,19 @@ namespace Craft
 			// All painting occurs here, between BeginPaint and EndPaint.
 			FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
 			EndPaint(handle, &ps);
+		}
+		return 0;
+		case WM_SIZE:
+		{
+			if (wparam == SIZE_MINIMIZED)
+				break;
+
+			if (!instance)
+				break;
+
+			uint32_t width = LOWORD(lparam);
+			uint32_t height = HIWORD(lparam);
+			instance->OnResize(width, height);
 		}
 		return 0;
 

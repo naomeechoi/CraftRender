@@ -66,6 +66,30 @@ namespace Craft
 		swapChain->Present(vsync, 0);
 	}
 
+	void GraphicsContext::OnResize(uint32_t width, uint32_t height)
+	{
+		if (!device || !context || !swapChain)
+			return;
+
+		context->ClearState();
+		context->Flush();
+
+		SafeRelease(renderTargetView);
+		ThrowIfFailed(
+			swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0),
+			L"Failed to resize swapchain buffer");
+
+		CreateRenderTargetView();
+
+		viewport.Width = static_cast<float>(width);
+		viewport.Height = static_cast<float>(height);
+
+		// 레스터라이저가 화면 크기를 알아야 픽셀 계산을 할 수 있다.
+		// 레스터라이저는 왜 스리디 가속 장치일까?
+
+		context->RSSetViewports(1, &viewport);
+	}
+
 	GraphicsContext& GraphicsContext::Get()
 	{
 		assert(instance);

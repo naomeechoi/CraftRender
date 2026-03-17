@@ -18,6 +18,8 @@ namespace Craft
 
 		void EndScene(uint32_t vsync);
 
+		void OnResize(uint32_t width, uint32_t height);
+
 		inline ID3D11Device& GetDevice() const { return *device; }
 		inline ID3D11DeviceContext& GetDeviceContext() const { return *context; }
 		static GraphicsContext& Get();

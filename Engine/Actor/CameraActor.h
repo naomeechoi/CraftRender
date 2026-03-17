@@ -7,7 +7,10 @@ namespace Craft
 	class CRAFT_API CameraActor : public Actor
 	{
 	public:
-		CameraActor();
+		CameraActor(
+			float fieldOfView = 60.0f,
+			float nearDistance = 0.1f,
+			float farDistance = 10000.0f);
 		~CameraActor();
 
 		virtual void Tick(float deltaTime) override;
@@ -15,6 +18,13 @@ namespace Craft
 
 	private:
 		Matrix4 viewMatrix;
+
+		Matrix4 projectionMatrix;
+		float fieldOfView = 0;
+		float width = 0;
+		float height = 0;
+		float nearDistance = 0;
+		float farDistance = 0;
 	};
 }
 

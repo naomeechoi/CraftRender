@@ -33,6 +33,7 @@ namespace Craft
 		static Matrix4 Scale(float scale);
 
 		static Matrix4 LookAt(const Vector3& position, const Vector3& target, const Vector3& up);
+		static Matrix4 Perspective(float fieldOfView, float width, float height, float nearDistance, float farDistance);
 
 		Matrix4& operator=(const Matrix4& other);
 		Matrix4 operator*(const Matrix4& other) const;

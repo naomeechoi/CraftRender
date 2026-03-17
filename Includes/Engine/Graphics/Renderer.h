@@ -31,7 +31,7 @@ namespace Craft
 			std::shared_ptr<Shader> shader,
 			std::shared_ptr<Transform> transform);
 
-		void UpdateCameraMatrix(const Matrix4& viewMatrix);
+		void UpdateCameraMatrix(const Matrix4& viewMatrix, const Matrix4& projectionMatrix);
 
 		void DrawScene();
 		static Renderer& Get();

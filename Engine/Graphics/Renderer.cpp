@@ -49,15 +49,15 @@ namespace Craft
 		renderQueue.emplace_back(command);
 	}
 
-	void Renderer::UpdateCameraMatrix(const Matrix4& viewMatrix)
+	void Renderer::UpdateCameraMatrix(const Matrix4& viewMatrix, const Matrix4& projectionMatrix)
 	{
 		auto& context = GraphicsContext::Get().GetDeviceContext();
 		D3D11_MAPPED_SUBRESOURCE resource = {};
 		ThrowIfFailed(context.Map(cameraBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource),
 			L"Failed to map camera buffer");
 
-		Matrix4 viewMatirxRef = Matrix4::Transpose(viewMatrix);
-		memcpy(resource.pData, &viewMatirxRef, sizeof(Matrix4));
+		Matrix4 cameraMatirxRef = Matrix4::Transpose(viewMatrix * projectionMatrix);
+		memcpy(resource.pData, &cameraMatirxRef, sizeof(Matrix4));
 		context.Unmap(cameraBuffer, 0);
 	}
 
