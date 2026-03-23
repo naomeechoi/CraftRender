@@ -6,6 +6,7 @@
 #include "Resource/MeshLoader.h"
 #include "Resource/TextureLoader.h"
 #include "Core/Input.h"
+#include <windowsx.h>
 
 namespace Craft
 {
@@ -79,6 +80,9 @@ namespace Craft
 		// 창 종료 메시지가 발생할 때까지 실행.
 		while (msg.message != WM_QUIT)
 		{
+			if (isQuit)
+				break;
+
 			// 창 메시지 처리.
 			// 비동기 방식으로 메시지가 들어왔는지 확인.
 			if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -125,10 +129,17 @@ namespace Craft
 						nextLevel.reset();
 					}
 
+					input->ResetInputs();
+
 					previousTime = currentTime;
 				}
 			}
 		}
+	}
+
+	void Engine::Quit()
+	{
+		isQuit = true;
 	}
 
 	void Engine::OnResize(uint32_t width, uint32_t height)
@@ -207,6 +218,48 @@ namespace Craft
 				uint32_t vkCode = static_cast<uint32_t>(wparam);
 				Input::Get().SetKeyUpDown(vkCode, isKeyUp, isKeyDown);
 			}
+		}
+		return 0;
+		case WM_LBUTTONDOWN:
+		{
+			if (!Input::Get().IsValid())
+				break;
+
+			Input::Get().SetButtonUpDown(0, false, true);
+		}
+		return 0;
+		case WM_RBUTTONDOWN:
+		{
+			if (!Input::Get().IsValid())
+				break;
+
+			Input::Get().SetButtonUpDown(1, false, true);
+		}
+		return 0;
+		case WM_LBUTTONUP:
+		{
+			if (!Input::Get().IsValid())
+				break;
+
+			Input::Get().SetButtonUpDown(0, true, false);
+		}
+		return 0;
+		case WM_RBUTTONUP:
+		{
+			if (!Input::Get().IsValid())
+				break;
+
+			Input::Get().SetButtonUpDown(1, true, false);
+		}
+		return 0;
+		case WM_MOUSEMOVE:
+		{
+			if (!Input::Get().IsValid())
+				break;
+
+			int xPosition = GET_X_LPARAM(lparam);
+			int yPosition = GET_Y_LPARAM(lparam);
+			Input::Get().SetMousePosition(xPosition, yPosition);
 		}
 		return 0;
 		}

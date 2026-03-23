@@ -30,6 +30,7 @@ namespace Craft
 
 		bool Initialize(HINSTANCE hinstance);
 		void Run();
+		void Quit();
 
 		template<typename T, typename ...Args,
 			typename = std::enable_if_t<std::is_base_of<Level, T>::value>>
@@ -54,6 +55,7 @@ namespace Craft
 		void Draw();
 
 	protected:
+		bool isQuit = false;
 		std::unique_ptr<Win32Window> window;
 		std::unique_ptr<GraphicsContext> graphicsContext;
 		std::unique_ptr<class Renderer> renderer;

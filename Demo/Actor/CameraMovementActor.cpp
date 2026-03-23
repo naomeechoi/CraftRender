@@ -1,7 +1,6 @@
 #include "CameraMovementActor.h"
 #include "Core/Input.h"
 #include "Math/Transform.h"
-#include "Core/Engine.h"
 
 using namespace Craft;
 
@@ -15,7 +14,7 @@ void CameraMovementActor::Tick(float deltaTime)
 
 	if (Input::Get().IsKeyDown(VK_ESCAPE))
 	{
-
+		QuitGame();
 	}
 
 	if (Input::Get().IsKey(VK_RIGHT)
@@ -56,5 +55,11 @@ void CameraMovementActor::Tick(float deltaTime)
 	{
 		transform->position
 			= transform->position - transform->Up() * deltaTime * moveSpeed;
+	}
+
+	if (Input::Get().IsButton(0))
+	{
+		transform->rotation.y += dragSpeedOffset * Input::Get().GetMouseDeltaX();
+		transform->rotation.x += dragSpeedOffset * Input::Get().GetMouseDeltaY();
 	}
 }
