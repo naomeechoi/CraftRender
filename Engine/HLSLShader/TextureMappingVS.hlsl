@@ -13,6 +13,8 @@ cbuffer Transform : register(b0)
 cbuffer Camera : register(b1)
 {
     matrix cameraMatrix;
+    float3 cameraPosition;
+    float padding;
 };
 
 struct VSOutput
@@ -20,6 +22,7 @@ struct VSOutput
     float4 position : SV_POSITION;
     float2 texCoord : TEXCOORD;
     float3 normal : NORMAL;
+    float3 cameraPosition : TEXCOORD1;
 };
 
 VSOutput main(VSInput input)
@@ -31,7 +34,8 @@ VSOutput main(VSInput input)
     
     output.texCoord = input.texCoord;
     
-    output.normal = mul(input.normal, (float3x3)worldMatrix);
+    output.normal = normalize(mul(input.normal, (float3x3) worldMatrix));
+    output.cameraPosition = cameraPosition;
     
     return output;
 }

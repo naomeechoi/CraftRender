@@ -17,6 +17,13 @@ namespace Craft
 		std::shared_ptr<Transform> transform;
 	};
 
+	struct CameraData
+	{
+		Matrix4 matrix;
+		Vector3 position;
+		float padding;
+	};
+
 	// DrawCall ´ã´ç
 	// RHI - Render Hardware Interface
 	class Renderer
@@ -31,7 +38,10 @@ namespace Craft
 			std::shared_ptr<Shader> shader,
 			std::shared_ptr<Transform> transform);
 
-		void UpdateCameraMatrix(const Matrix4& viewMatrix, const Matrix4& projectionMatrix);
+		void UpdateCameraMatrix(
+			const Matrix4& viewMatrix,
+			const Matrix4& projectionMatrix,
+			const Vector3& position);
 
 		void DrawScene();
 		static Renderer& Get();
