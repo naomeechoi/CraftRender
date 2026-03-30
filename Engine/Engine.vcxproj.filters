@@ -72,6 +72,15 @@
     <ClCompile Include="Core\Input.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Actor\LightActor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\SpecularMappingShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\NormalMappingShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Win32Window.h">
@@ -137,11 +146,24 @@
     <ClInclude Include="Core\Input.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Actor\LightActor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\SpecularMappingShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\NormalMappingShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HLSLShader\DefaultVS.hlsl" />
     <FxCompile Include="HLSLShader\DefaultPS.hlsl" />
     <FxCompile Include="HLSLShader\TextureMappingVS.hlsl" />
     <FxCompile Include="HLSLShader\TextureMappingPS.hlsl" />
+    <FxCompile Include="HLSLShader\SpecularMappingVS.hlsl" />
+    <FxCompile Include="HLSLShader\SpecularMappingPS.hlsl" />
+    <FxCompile Include="HLSLShader\NormalMappingVS.hlsl" />
+    <FxCompile Include="HLSLShader\NormalMappingPS.hlsl" />
   </ItemGroup>
 </Project>

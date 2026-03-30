@@ -28,6 +28,7 @@ namespace Craft
 		void CreateSwapChain(const Win32Window& window);
 		void CreateViewport(const Win32Window& window);
 		void CreateRenderTargetView();
+		void CreateDepthStencilView(uint32_t width, uint32_t height);
 
 	private:
 		ID3D11Device* device = nullptr;
@@ -35,6 +36,9 @@ namespace Craft
 		IDXGISwapChain* swapChain = nullptr;
 
 		ID3D11RenderTargetView* renderTargetView = nullptr;
+
+		// DSV
+		ID3D11DepthStencilView* depthStencilView = nullptr;
 
 		D3D11_VIEWPORT viewport = {};
 

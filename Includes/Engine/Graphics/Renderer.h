@@ -21,7 +21,15 @@ namespace Craft
 	{
 		Matrix4 matrix;
 		Vector3 position;
-		float padding;
+		float padding = 0.0f;
+	};
+
+	struct LightData
+	{
+		Vector3 position;
+		float intensity;
+		Vector3 color = Vector3::One;
+		float padding = 0.0f;
 	};
 
 	// DrawCall ´ã´ç
@@ -43,12 +51,20 @@ namespace Craft
 			const Matrix4& projectionMatrix,
 			const Vector3& position);
 
+		void UpdateLightData(
+			const Vector3& position,
+			const float intensity,
+			const Vector3& color);
+
 		void DrawScene();
 		static Renderer& Get();
 
 	private:
 		std::vector<RenderCommand> renderQueue;
 		ID3D11Buffer* cameraBuffer = nullptr;
+
+		ID3D11Buffer* lightBuffer = nullptr;
+
 		static Renderer* instance;
 	};
 }

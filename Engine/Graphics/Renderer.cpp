@@ -20,6 +20,7 @@ namespace Craft
 	Renderer::~Renderer()
 	{
 		SafeRelease(cameraBuffer);
+		SafeRelease(lightBuffer);
 	}
 
 	// 초기화.
@@ -34,6 +35,14 @@ namespace Craft
 		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 		ThrowIfFailed(device.CreateBuffer(&bufferDesc, nullptr, &cameraBuffer), L"Failed to create camera buffer");
+
+		D3D11_BUFFER_DESC lightBufferDesc = {};
+		lightBufferDesc.ByteWidth = sizeof(LightData);
+		lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+		ThrowIfFailed(device.CreateBuffer(&lightBufferDesc, nullptr, &lightBuffer), L"Failed to create light buffer");
 	}
 
 	void Renderer::Submit(
@@ -65,6 +74,22 @@ namespace Craft
 		newData.position = position;
 		memcpy(resource.pData, &newData, sizeof(CameraData));
 		context.Unmap(cameraBuffer, 0);
+	}
+
+	void Renderer::UpdateLightData(const Vector3& position, const float intensity, const Vector3& color)
+	{
+		auto& context = GraphicsContext::Get().GetDeviceContext();
+		D3D11_MAPPED_SUBRESOURCE resource = {};
+		ThrowIfFailed(context.Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource),
+			L"Failed to map light buffer");
+
+		LightData newData;
+
+		newData.position = position;
+		newData.intensity = intensity;
+		newData.color = color;
+		memcpy(resource.pData, &newData, sizeof(LightData));
+		context.Unmap(lightBuffer, 0);
 	}
 
 	// DrawCall 발생 처리.
@@ -101,6 +126,7 @@ namespace Craft
 			command.transform->Bind();
 			
 			context.VSSetConstantBuffers(1, 1, &cameraBuffer);
+			context.PSSetConstantBuffers(0, 1, &lightBuffer);
 			context.DrawIndexed(command.mesh->GetIndexCount(), 0, 0);
 		}
 

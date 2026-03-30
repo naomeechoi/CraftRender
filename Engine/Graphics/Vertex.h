@@ -12,6 +12,8 @@ namespace Craft
 		Vector3 position;
 		Vector2 texCoord;
 		Vector3 normal;
+		Vector3 tangent;
+		Vector3 bitangent;
 
 		Vertex(const Vector3& position,
 			const Vector2& texCoord = Vector2::Zero,
